@@ -1,13 +1,22 @@
 package com.kennell.spring.springproject;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class BinarySearchImpl {
 	
+	@Autowired
+	@Qualifier("quick")
 	private SortAlgorithm sortAlgorithm;
-	
-	public BinarySearchImpl(SortAlgorithm sortAlgorithm) {
-		this.sortAlgorithm = sortAlgorithm;
-	}
-	
+
 	public int binarySearch(int[] arr, int searchVal) {
 		
 		sortAlgorithm.sort(arr);
@@ -37,5 +46,15 @@ public class BinarySearchImpl {
         // in array 
         return -1; 
     } 
+	
+	@PostConstruct
+	public void postConstruct() {
+		//Runs after instance is created
+	}
+	
+	@PreDestroy
+	public void preDestroy() {
+		//Runs before the bean is destroyed
+	}
 	
 }
