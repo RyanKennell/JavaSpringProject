@@ -1,21 +1,27 @@
 package com.kennell.spring.springproject;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
+import com.kennell.spring.cdi.CdiBusiness;
+import com.kennell.spring.properties.ExternalService;
 import com.kennell.spring.scope.PersonDAO;
 
-@SpringBootApplication
+@Configuration
 @ComponentScan("com.kennell.spring")
+@PropertySource("classpath:app.properties")
 public class SpringProjectApplication {
 
 	public static void main(String[] args) {
-		//BinarySearchImpl binarySearch = new BinarySearchImpl(new QuickSortAlgorithm());
-		
-		ConfigurableApplicationContext applicationContext = SpringApplication.run(SpringProjectApplication.class, args);
+
+		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext(SpringProjectApplication.class);
 		BinarySearchImpl binarySearch = applicationContext.getBean(BinarySearchImpl.class);
+		
+		ExternalService service = applicationContext.getBean(ExternalService.class);
+		System.out.println(service.returnServiceURL());
 		
 		int result = binarySearch.binarySearch(new int[] { 124,  4, 6}, 6);
 		System.out.println(result);
@@ -25,6 +31,12 @@ public class SpringProjectApplication {
 	
 		System.out.println(person1.getJdbcConnection());
 		System.out.println(person2.getJdbcConnection());
+	
+		CdiBusiness cdiBusiness = applicationContext.getBean(CdiBusiness.class);
+		
+		System.out.println(cdiBusiness + " " + cdiBusiness.getCdidao());
+	
+		applicationContext.close();
 	}
 
 }
